@@ -1,0 +1,63 @@
+ 1) Without considering unsuccessful probes for N=5000: 
+ 
+ ____________________________________________________________________
+| Hash       | Collision         | Hash Function 1 | Hash Function 2 |
+| Table Size | Resolution Method | Colls. | Probes | Colls. | Probes |
+|____________________________________________________________________|
+| N = 5000   | Separate Chaining |  5659    2.047  |  5686    2.104  | 
+|            | Double Hashing    |  2411    4.695  |  2456    4.590  | 
+|            | Custom Probing    |  2409    4.714  |  2478    4.854  | 
+|____________________________________________________________________|
+| N = 10000  | Separate Chaining |  3638    1.535  |  3691    1.525  | 
+|            | Double Hashing    |  4855    4.883  |  4967    5.503  | 
+|            | Custom Probing    |  4893    4.455  |  4895    4.826  | 
+|____________________________________________________________________|
+| N = 20000  | Separate Chaining |  2149    1.252  |  2104    1.279  | 
+|            | Double Hashing    |  2501    1.413  |  2452    1.420  | 
+|            | Custom Probing    |  2509    1.420  |  2478    1.425  | 
+|____________________________________________________________________|
+
+
+2) Considering unsuccessful probes for 5000: 
+
+ ____________________________________________________________________
+| Hash       | Collision         | Hash Function 1 | Hash Function 2 |
+| Table Size | Resolution Method | Colls. | Probes | Colls. | Probes |
+|____________________________________________________________________|
+| N = 5000   | Separate Chaining |  5659    2.047  |  5686    2.096  | 
+|            | Double Hashing    |  2275    13.410 |  2242    12.760 | 
+|            | Custom Probing    |  2272    13.469 |  2288    14.230 | 
+|____________________________________________________________________|
+| N = 10000  | Separate Chaining |  3638    1.525  |  3691    1.528  | 
+|            | Double Hashing    |  4478    4.292  |  4474    4.358  | 
+|            | Custom Probing    |  4494    4.031  |  4560    4.528  | 
+|____________________________________________________________________|
+| N = 20000  | Separate Chaining |  2149    1.286  |  2104    1.280  | 
+|            | Double Hashing    |  2512    1.398  |  2516    1.432  | 
+|            | Custom Probing    |  2512    1.438  |  2471    1.446  | 
+|____________|___________________|_________________|_________________|
+
+
+Hash functions used: 
+
+unsigned int fnv1a_hash(const std::string &s)
+{
+    long long int hash = FNV_OFFSET_BASIS;
+    for (char c : s)
+    {
+        hash ^= static_cast<unsigned int>(c);
+        hash *= FNV_PRIME;
+    }
+    return hash;
+}
+
+
+long long int djb2_hash(const std::string &s)
+{
+    unsigned int hash_value = 5381;
+    for (char c : s)
+    {
+        hash_value = ((hash_value << 5) + hash_value) + static_cast<unsigned int>(c);
+    }
+    return hash_value;
+}
